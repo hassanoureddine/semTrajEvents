@@ -1,0 +1,88 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.example</groupId>
+  <artifactId>semTrajEvents</artifactId>
+  <version>1.0</version>
+  <name>CEPTraj</name>
+  
+  <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+                <version>2.3.2</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>org.example.semTrajEvents.CEPTraj</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+  
+<dependencies>
+	 <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-java</artifactId>
+            <version>1.13.0</version>
+            <scope>compile</scope>
+     </dependency>
+     
+	 <dependency>
+		  <groupId>org.apache.flink</groupId>
+		  <artifactId>flink-streaming-java_2.11</artifactId>
+		  <version>1.13.0</version>
+	 </dependency>
+	<dependency>
+	    <groupId>org.apache.flink</groupId>
+	    <artifactId>flink-cep_2.11</artifactId>
+	    <version>1.13.0</version>
+	</dependency>
+	<dependency>
+        <groupId>org.apache.flink</groupId>
+        <artifactId>flink-clients_2.11</artifactId>
+        <version>1.13.0</version>
+ 	</dependency>
+	
+	<dependency>
+	    <groupId>org.apache.flink</groupId>
+	    <artifactId>flink-connector-kafka_2.11</artifactId>
+	    <version>1.13.0</version>
+	</dependency>
+		
+	<dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.7</version>
+    </dependency>
+	
+	
+	
+</dependencies>
+
+
+  
+</project>
