@@ -1,4 +1,4 @@
-package social;
+package org.example.social;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;

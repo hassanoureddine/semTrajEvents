@@ -1,4 +1,4 @@
-package patternsForTest;
+package org.example.patternsForTest;
 
 import org.apache.flink.cep.pattern.Pattern;
 import org.apache.flink.cep.pattern.conditions.SimpleCondition;

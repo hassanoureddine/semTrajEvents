@@ -1,4 +1,4 @@
-package individual;
+package org.example.individual;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;

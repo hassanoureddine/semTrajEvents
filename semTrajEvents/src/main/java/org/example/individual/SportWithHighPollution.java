@@ -1,4 +1,4 @@
-package individual;
+package org.example.individual;
 
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package individual;
+package org.example.individual;
 
 public class ArriveLeaveOfficeDifferentModeAlert {
 private int participantID;

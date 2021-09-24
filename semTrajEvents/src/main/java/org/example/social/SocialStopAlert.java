@@ -1,4 +1,4 @@
-package social;
+package org.example.social;
 
 
 public class SocialStopAlert {

@@ -16,11 +16,10 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.example.events.*;
-
-import individual.*;
-import patternsForTest.*;
-import social.SocialStop;
-import social.SocialStopAlert;
+import org.example.individual.*;
+import org.example.patternsForTest.*;
+import org.example.social.SocialStop;
+import org.example.social.SocialStopAlert;
 
 
 
@@ -71,11 +70,16 @@ public class CEPTraj {
 		//DataStream<HomeToOfficeHighPollutionAlert> alerts = HomeToOfficeHighPollution.homeToOfficeHighPollutionAlertStream(patternStream);
 		
 		//(4)
-		PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, ArriveLeaveOfficeDifferentMode.arriveLeaveOfficeDifferentMode());		 
-		DataStream<ArriveLeaveOfficeDifferentModeAlert> alerts = ArriveLeaveOfficeDifferentMode.arriveLeaveOfficeDifferentModeAlertStream(patternStream);
+		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, ArriveLeaveOfficeDifferentMode.arriveLeaveOfficeDifferentMode());		 
+		//DataStream<ArriveLeaveOfficeDifferentModeAlert> alerts = ArriveLeaveOfficeDifferentMode.arriveLeaveOfficeDifferentModeAlertStream(patternStream);
 		
+		//(5)
+		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, AtOfficeAfter.atOfficeAfter(20));
+		//DataStream<AtOfficeAfterAlert> alerts = AtOfficeAfter.atOfficeAfterStream(patternStream, 20);
 		
-		
+		//(6)
+		PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, LeavingOfficeBefore.leavingOfficeBefore(17));
+		DataStream<LeavingOfficeBeforeAlert> alerts = LeavingOfficeBefore.leavingOfficeBeforeStream(patternStream, 17);
 		
 		
 		

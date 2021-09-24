@@ -1,22 +1,21 @@
-package individual;
+package org.example.individual;
 
-public class HomeToOfficeHighPollutionAlert {
+public class SportWithHighPollutionAlert {
 	private int participantID;
 	
 	private String start_time_event;
 	private String end_time_event;
 	
 	private String place;
-	private String hierarchy;
 	
-    public HomeToOfficeHighPollutionAlert(int participantID, String start_time_event, String end_time_event, String place) {
+    public SportWithHighPollutionAlert(int participantID, String start_time_event, String end_time_event, String place) {
         this.participantID = participantID;
         this.start_time_event = start_time_event;
         this.end_time_event = end_time_event;
         this.place = place;
     }
 
-    public HomeToOfficeHighPollutionAlert() {
+    public SportWithHighPollutionAlert() {
     	this(0, "empty start", "empty end", "empty place");
     }
     
@@ -52,8 +51,8 @@ public class HomeToOfficeHighPollutionAlert {
 	
 	@Override
     public boolean equals(Object obj) {
-        if (obj instanceof HomeToOfficeHighPollutionAlert) {
-        	HomeToOfficeHighPollutionAlert other = (HomeToOfficeHighPollutionAlert) obj;
+        if (obj instanceof SportWithHighPollutionAlert) {
+        	SportWithHighPollutionAlert other = (SportWithHighPollutionAlert) obj;
             return participantID == other.participantID
             		&& start_time_event.equals(other.start_time_event) 
             		&& end_time_event.equals(other.end_time_event)
@@ -65,7 +64,7 @@ public class HomeToOfficeHighPollutionAlert {
 
     @Override
     public String toString() {
-        return "The alert Home to Office High Pollution is detected for participant: " + getParticipantID()
+        return "The alert Sport activity with high level of pollution is detected for participant: " + getParticipantID()
         + " at place: " + getPlace()
         + " starting at " + getStart_time_event() 
         + " and ending at " + getEnd_time_event();

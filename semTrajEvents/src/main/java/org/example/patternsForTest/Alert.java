@@ -1,4 +1,4 @@
-package patternsForTest;
+package org.example.patternsForTest;
 
 
 public class Alert {

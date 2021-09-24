@@ -505,6 +505,7 @@ public class SemTrajSegment {
 		LocalDateTime localDateTime = LocalDateTime.from(formatDateTime.parse(this.getStart_datetime().replace(' ', 'T')));
 		Timestamp ts = Timestamp.valueOf(localDateTime);
 		//System.out.println(String.valueOf(ts.getTime()));
+		
 		return ts.getTime();
 	}
 	

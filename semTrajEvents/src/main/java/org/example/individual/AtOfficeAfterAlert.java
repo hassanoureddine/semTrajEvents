@@ -1,24 +1,23 @@
-package individual;
+package org.example.individual;
 
-public class IndividualStopAlert {
+public class AtOfficeAfterAlert {
 	private int participantID;
 	
 	private String start_time_event;
 	private String end_time_event;
 	
-	private String place;
-	private String hierarchy;
+	private int afterTime;
 	
-    public IndividualStopAlert(int participantID, String start_time_event, String end_time_event, String place, String hierarchy) {
+	
+    public AtOfficeAfterAlert(int participantID, String start_time_event, String end_time_event, int afterTime) {
         this.participantID = participantID;
         this.start_time_event = start_time_event;
         this.end_time_event = end_time_event;
-        this.place = place;
-        this.hierarchy = hierarchy;
+        this.afterTime = afterTime;
     }
 
-    public IndividualStopAlert() {
-    	this(0, "empty start", "empty end", "empty place", "empty hierarchy");
+    public AtOfficeAfterAlert() {
+    	this(0, "empty start", "empty end", 0);
     }
     
 	public int getParticipantID() {
@@ -43,29 +42,22 @@ public class IndividualStopAlert {
 		this.end_time_event = end_time_event;
 	}
     
-	public String getPlace() {
-		return place;
+	public int getAfterTime() {
+		return afterTime;
 	}
-	public void setPlace(String place) {
-		this.place = place;
+	public void setAfterTime(int afterTime) {
+		this.afterTime = afterTime;
 	}
 	
-	public String getHierarchy() {
-		return hierarchy;
-	}
-	public void setHierarchy(String hierarchy) {
-		this.hierarchy = hierarchy;
-	}
 	
 	@Override
     public boolean equals(Object obj) {
-        if (obj instanceof IndividualStopAlert) {
-        	IndividualStopAlert other = (IndividualStopAlert) obj;
+        if (obj instanceof AtOfficeAfterAlert) {
+        	AtOfficeAfterAlert other = (AtOfficeAfterAlert) obj;
             return participantID == other.participantID
             		&& start_time_event.equals(other.start_time_event) 
             		&& end_time_event.equals(other.end_time_event)
-            		&& place.equals(other.place)
-            		&& hierarchy.equals(other.hierarchy);
+            		&& afterTime == other.afterTime;
         } else {
             return false;
         }
@@ -73,9 +65,9 @@ public class IndividualStopAlert {
 
     @Override
     public String toString() {
-        return "The alert individual stop is detected for participant: " + getParticipantID()
-        + " at place: " + getPlace() + " at hierarchy: " + getHierarchy()
-        + " starting at " + "it can not be detected" //+ getStart_time_event() 
+        return "The participant: " + getParticipantID() 
+        + " is present at the office after " + Integer.toString(getAfterTime())
+        + " segment time interval is starting at " + getStart_time_event() 
         + " and ending at " + getEnd_time_event();
     }
 }
