@@ -66,8 +66,8 @@ public class CEPTraj {
 		//DataStream<SportWithHighPollutionAlert> alerts = SportWithHighPollution.sportWithHighPollutionAlertStream(patternStream);
 		
 		//(3)
-		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, HomeToOfficeHighPollution.homeToOfficeHighPollution(25));		 
-		//DataStream<HomeToOfficeHighPollutionAlert> alerts = HomeToOfficeHighPollution.homeToOfficeHighPollutionAlertStream(patternStream);
+		PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, HomeToOfficeHighPollution.homeToOfficeHighPollution(3));		 
+		DataStream<HomeToOfficeHighPollutionAlert> alerts = HomeToOfficeHighPollution.homeToOfficeHighPollutionAlertStream(patternStream);
 		
 		//(4)
 		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, ArriveLeaveOfficeDifferentMode.arriveLeaveOfficeDifferentMode());		 
@@ -78,8 +78,8 @@ public class CEPTraj {
 		//DataStream<AtOfficeAfterAlert> alerts = AtOfficeAfter.atOfficeAfterStream(patternStream, 20);
 		
 		//(6)
-		PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, LeavingOfficeBefore.leavingOfficeBefore(17));
-		DataStream<LeavingOfficeBeforeAlert> alerts = LeavingOfficeBefore.leavingOfficeBeforeStream(patternStream, 17);
+		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, LeavingOfficeBefore.leavingOfficeBefore(17));
+		//DataStream<LeavingOfficeBeforeAlert> alerts = LeavingOfficeBefore.leavingOfficeBeforeStream(patternStream, 17);
 		
 		
 		

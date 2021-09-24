@@ -3,6 +3,7 @@ package org.example.individual;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +18,9 @@ import org.example.events.SemTrajSegment;
 
 //3- A trajectory going from home to office and be exposed to a high level of pollution for a minimum time interval
 public class HomeToOfficeHighPollution {
-	static long exposureDuration = 0;
+	static HashMap<Integer, Long> exposureDurationById = new HashMap<>();
+	
+	//static long exposureDuration = 0;
 	
 	public static Pattern<SemTrajSegment, ?> homeToOfficeHighPollution(long duration) {
 		Pattern<SemTrajSegment, ?> p = Pattern.<SemTrajSegment>begin("home", AfterMatchSkipStrategy.skipToLast("home"))
@@ -26,7 +29,8 @@ public class HomeToOfficeHighPollution {
 					@Override
 					public boolean filter(SemTrajSegment value) throws Exception {
 						if(value.getActivity_semantics() != null && value.getActivity_semantics().equals("Domicile")) {
-							exposureDuration = 0;
+							//exposureDuration = 0;
+							exposureDurationById.put(value.getParticipantID(), (long) 0);
 							return true;
 						}else {
 							return false;
@@ -53,8 +57,20 @@ public class HomeToOfficeHighPollution {
 										|| (value.getNO2_semantics() != null && value.getNO2_semantics().equals("High"))
 										)
 								) {
-							exposureDuration += Duration(value.getStart_datetime(), value.getEnd_datetime());
-							System.out.println("exposure duration:" + Long.toString(exposureDuration) + " at " + value.getStart_datetime() + " end " + value.getEnd_datetime());
+							
+							
+							//exposureDuration += Duration(value.getStart_datetime(), value.getEnd_datetime());
+							
+							long exposureDuration = exposureDurationById.get(value.getParticipantID()) 
+									+ Duration(value.getStart_datetime(), value.getEnd_datetime());
+							
+							exposureDurationById.put(value.getParticipantID(), exposureDuration);
+							
+							System.out.println("exposure duration: for " + Integer.toString(value.getParticipantID()) + " is "
+							+ Long.toString(exposureDurationById.get(value.getParticipantID())) 
+							+ " at " + value.getStart_datetime() 
+							+ " end " + value.getEnd_datetime());
+							
 							return true;
 						}
 						return false;
@@ -66,8 +82,8 @@ public class HomeToOfficeHighPollution {
 					@Override
 					public boolean filter(SemTrajSegment value) throws Exception {
 						if(value.getActivity_semantics() != null && value.getActivity_semantics().equals("Bureau")) {
-							if(exposureDuration >= duration) {
-								exposureDuration = 0;
+							if(exposureDurationById.get(value.getParticipantID()) >= duration) {
+								exposureDurationById.put(value.getParticipantID(), (long) 0);
 								return true;
 							}
 						}
