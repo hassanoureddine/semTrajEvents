@@ -1,1 +1,1 @@
-The alert Home to Office High Pollution is detected for participant: 27 at place: Quartier Saint-Ambroise, Paris, u00cele-de-France, France mu00e9tropolitaine, 75011, France starting at 2019-06-19 07:03:00+02:00 and ending at 2019-06-19 07:05:00+02:00
+The alert stop is detected for participant1: 96 and participant2: 98 at place: Rue Jean Macu00e9 at hierarchy: road with duration = 173 secs starting at   and ending at  

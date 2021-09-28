@@ -1,7 +1,7 @@
-package org.example.social;
+package org.example.aggregated;
 
 
-public class SocialStopAlert {
+public class AggregatedStopAlert {
 	private int participantID1;
 	private int participantID2;
 	
@@ -10,18 +10,20 @@ public class SocialStopAlert {
 	
 	private String place;
 	private String hierarchy;
+	private long duration;
 	
-    public SocialStopAlert(int participantID1, int participantID2, String start_time_event, String end_time_event, String place, String hierarchy) {
+    public AggregatedStopAlert(int participantID1, int participantID2, String start_time_event, String end_time_event, String place, long duration, String hierarchy) {
         this.participantID1 = participantID1;
         this.participantID2 = participantID2;
         this.start_time_event = start_time_event;
         this.end_time_event = end_time_event;
         this.place = place;
+        this.setDuration(duration);
         this.hierarchy = hierarchy;
     }
 
-    public SocialStopAlert() {
-    	this(0, 0, "empty start", "empty end", "empty place", "empty hierarchy");
+    public AggregatedStopAlert() {
+    	this(0, 0, "empty start", "empty end", "empty place", 0 ,"empty hierarchy");
     }
     
 	public int getParticipantID1() {
@@ -67,10 +69,18 @@ public class SocialStopAlert {
 		this.hierarchy = hierarchy;
 	}
 	
+	public long getDuration() {
+		return duration;
+	}
+
+	public void setDuration(long duration) {
+		this.duration = duration;
+	}
+	
 	@Override
     public boolean equals(Object obj) {
-        if (obj instanceof SocialStopAlert) {
-        	SocialStopAlert other = (SocialStopAlert) obj;
+        if (obj instanceof AggregatedStopAlert) {
+        	AggregatedStopAlert other = (AggregatedStopAlert) obj;
             return participantID1 == other.participantID1
             		&& participantID2 == other.participantID2
             		&& start_time_event.equals(other.start_time_event) 
@@ -86,7 +96,9 @@ public class SocialStopAlert {
     public String toString() {
         return "The alert stop is detected for participant1: " + getParticipantID1() 
         + " and participant2: " + getParticipantID2()
-        + " at place: " + getPlace() + " at hierarchy: " + getHierarchy()
+        + " at place: " + getPlace() + " at hierarchy: " + getHierarchy() + " with duration = " + Long.toString(duration) + " secs"
         + " starting at " + getStart_time_event() + " and ending at " + getEnd_time_event();
     }
+
+
 }

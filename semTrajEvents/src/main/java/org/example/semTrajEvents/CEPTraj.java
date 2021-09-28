@@ -15,11 +15,11 @@ import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
+import org.example.aggregated.AggegatedStop;
+import org.example.aggregated.AggregatedStopAlert;
 import org.example.events.*;
 import org.example.individual.*;
 import org.example.patternsForTest.*;
-import org.example.social.SocialStop;
-import org.example.social.SocialStopAlert;
 
 
 
@@ -30,13 +30,13 @@ public class CEPTraj {
 		
 		ParameterTool parameterTool = ParameterTool.fromArgs(args);
 		Properties props=parameterTool.getProperties();
-	    props.setProperty("auto.offset.reset", "earliest"); 
+		//props.setProperty("auto.offset.reset", "earliest"); 
+		props.setProperty("auto.offset.reset", "latest"); 
 	    
 		// Set up the execution environment
 		StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();	
 		
-		env.enableCheckpointing(1000).
-		setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+		//env.enableCheckpointing(1000).setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
 		
         // Input stream of monitoring events
 		DataStream<SemTrajSegment> messageStream = env
@@ -54,6 +54,7 @@ public class CEPTraj {
 		});		
 		
 		DataStream<SemTrajSegment> nonPartitionedInput = messageStream;
+		
 		//partitionedInput.map(v -> v.toString()).print();
 		
 		//------------------Individual------------------
@@ -66,8 +67,8 @@ public class CEPTraj {
 		//DataStream<SportWithHighPollutionAlert> alerts = SportWithHighPollution.sportWithHighPollutionAlertStream(patternStream);
 		
 		//(3)
-		PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, HomeToOfficeHighPollution.homeToOfficeHighPollution(3));		 
-		DataStream<HomeToOfficeHighPollutionAlert> alerts = HomeToOfficeHighPollution.homeToOfficeHighPollutionAlertStream(patternStream);
+		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, HomeToOfficeHighPollution.homeToOfficeHighPollution(3));		 
+		//DataStream<HomeToOfficeHighPollutionAlert> alerts = HomeToOfficeHighPollution.homeToOfficeHighPollutionAlertStream(patternStream);
 		
 		//(4)
 		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, ArriveLeaveOfficeDifferentMode.arriveLeaveOfficeDifferentMode());		 
@@ -84,10 +85,12 @@ public class CEPTraj {
 		
 		
 		//------------------Aggregated------------------
-		/*//(1)
-		PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, SocialStop.socialStop("county", 5, 2));
-		DataStream<SocialStopAlert> alerts = SocialStop.socialStopAlerttStream(patternStream);
-		*/
+		//(1)
+		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, SocialStop.socialStop("road", 1, 2));
+		//DataStream<SocialStopAlert> alerts = SocialStop.socialStopAlertStream(patternStream);
+		
+		PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, AggegatedStop.aggregatedStop("road", 1, 2));
+		DataStream<AggregatedStopAlert> alerts = AggegatedStop.aggregatedStopAlertStream(patternStream);
 		
 		
 		/*PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, sequence.arriveLeaveBureau());	

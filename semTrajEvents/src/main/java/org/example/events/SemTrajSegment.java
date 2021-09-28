@@ -518,6 +518,9 @@ public class SemTrajSegment {
 		case "display_name":
 			return this.getDisplay_name();
 		case "road":
+			if(this.getRoad() == null) {
+				return "it is a null Road";
+			}
 			return this.getRoad();
 		case "suburb":
 			return this.getSuburb();
