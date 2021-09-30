@@ -525,6 +525,9 @@ public class SemTrajSegment {
 		case "suburb":
 			return this.getSuburb();
 		case "town":
+			if(this.getTown() == null) {
+				return "it is a null Town";
+			}
 			return this.getTown();
 		case "county":
 			return this.getCounty();

@@ -17,6 +17,8 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.example.aggregated.AggegatedStop;
 import org.example.aggregated.AggregatedStopAlert;
+import org.example.aggregated.PlacesWithMin;
+import org.example.aggregated.PlacesWithMinAlert;
 import org.example.events.*;
 import org.example.individual.*;
 import org.example.patternsForTest.*;
@@ -86,11 +88,15 @@ public class CEPTraj {
 		
 		//------------------Aggregated------------------
 		//(1)
-		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, SocialStop.socialStop("road", 1, 2));
-		//DataStream<SocialStopAlert> alerts = SocialStop.socialStopAlertStream(patternStream);
+		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, AggegatedStop.aggregatedStop("road", 1, 2));
+		//DataStream<AggregatedStopAlert> alerts = AggegatedStop.aggregatedStopAlertStream(patternStream);
 		
-		PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, AggegatedStop.aggregatedStop("road", 1, 2));
-		DataStream<AggregatedStopAlert> alerts = AggegatedStop.aggregatedStopAlertStream(patternStream);
+		//(2)
+		
+		
+		//(3)
+		PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, PlacesWithMin.placesWithMin("town", 2));
+		DataStream<PlacesWithMinAlert> alerts = PlacesWithMin.placesWithMinAlertStream(patternStream);
 		
 		
 		/*PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, sequence.arriveLeaveBureau());	
