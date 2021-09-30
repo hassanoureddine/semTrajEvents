@@ -4,6 +4,7 @@ package org.example.semTrajEvents;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.utils.ParameterTool;
@@ -19,6 +20,8 @@ import org.example.aggregated.AggegatedStop;
 import org.example.aggregated.AggregatedStopAlert;
 import org.example.aggregated.PlacesWithMin;
 import org.example.aggregated.PlacesWithMinAlert;
+import org.example.aggregated.SameActivityDifferentRegion;
+import org.example.aggregated.SameActivityDifferentRegionAlert;
 import org.example.events.*;
 import org.example.individual.*;
 import org.example.patternsForTest.*;
@@ -95,9 +98,21 @@ public class CEPTraj {
 		
 		
 		//(3)
-		PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, PlacesWithMin.placesWithMin("town", 2));
-		DataStream<PlacesWithMinAlert> alerts = PlacesWithMin.placesWithMinAlertStream(patternStream);
+		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, PlacesWithMin.placesWithMin("town", 2));
+		//DataStream<PlacesWithMinAlert> alerts = PlacesWithMin.placesWithMinAlertStream(patternStream);
 		
+		//(4)
+		
+		
+		//(5)
+		
+		
+		//(6)
+		PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, SameActivityDifferentRegion.sameActivityDifferentRegion("town"));
+		DataStream<SameActivityDifferentRegionAlert> alerts = SameActivityDifferentRegion.sameActivityDifferentRegionAlertStream(patternStream);
+		
+		
+		//(7)
 		
 		/*PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, sequence.arriveLeaveBureau());	
 		DataStream<ArriveLeaveBureauAlert> alerts = patternStream.select(new PatternSelectFunction<SemTrajSegment, ArriveLeaveBureauAlert>() {

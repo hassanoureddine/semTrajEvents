@@ -1,8 +1,5 @@
 package org.example.aggregated;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,53 +13,55 @@ import org.apache.flink.cep.nfa.aftermatch.AfterMatchSkipStrategy;
 import org.apache.flink.cep.pattern.Pattern;
 import org.apache.flink.cep.pattern.conditions.IterativeCondition;
 import org.apache.flink.cep.pattern.conditions.SimpleCondition;
+import org.apache.flink.cep.pattern.conditions.IterativeCondition.Context;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.example.events.SemTrajSegment;
 
-//3- Places with a minimum number of persons at the same time
-public class PlacesWithMin {
+//6- Trajectories having the same activity, at the same time, but with different regions (or places)
+//different regions are according to a specified hierarchy specified by the pattern function 'sameActivityDifferentRegion' parameter
+public class SameActivityDifferentRegion {
 	
 	static HashMap<Integer,ParticipantStop> participantsStopsById = new HashMap<>();
 	
-	static HashSet<Integer> overlappedSegmentsIdsOfSamePlace = new HashSet<Integer>();
-	
-	static int MinimumNbParticipants = 2; // this is a default value and it can be changed by the pattern function 'placesWithMin'
+	static HashSet<Integer> overlappedSegmentsIdsOfSameActivityDifferentPlace = new HashSet<Integer>();
 
-	public static Pattern<SemTrajSegment, ?> placesWithMin(String hierarchy, int minimumNbParticipants){
-		
-		MinimumNbParticipants = minimumNbParticipants;
-		
+	public static Pattern<SemTrajSegment, ?> sameActivityDifferentRegion(String hierarchy){
 		Pattern<SemTrajSegment, ?> p = Pattern.<SemTrajSegment>begin("1st", AfterMatchSkipStrategy.skipPastLastEvent())
 				.subtype(SemTrajSegment.class)
 				.where(new SimpleCondition<SemTrajSegment>() {
 
 					@Override
 					public boolean filter(SemTrajSegment value) throws Exception {
+						
+						if(value.getActivity_semantics() == null) return false;
+						
 						if(participantsStopsById.containsKey(value.getParticipantID())) {
-							if(participantsStopsById.get(value.getParticipantID()).getPlace().equals(value.getPlaceAccordingToHierarchy(hierarchy))) {
+							if(participantsStopsById.get(value.getParticipantID()).getPlace().equals(value.getPlaceAccordingToHierarchy(hierarchy))
+									&& participantsStopsById.get(value.getParticipantID()).getActivity().equals(value.getActivity_semantics())) {
 								participantsStopsById.put(value.getParticipantID(),
 										new ParticipantStop(value.getParticipantID(),
 												value.getPlaceAccordingToHierarchy(hierarchy),
 												participantsStopsById.get(value.getParticipantID()).getStart_time_stop(),
-												value.getEnd_datetime(), ""));
+												value.getEnd_datetime(), 
+												value.getActivity_semantics()));
 								
 							}else {
 								participantsStopsById.put(value.getParticipantID(),
 										new ParticipantStop(value.getParticipantID(),
 												value.getPlaceAccordingToHierarchy(hierarchy),
 												value.getStart_datetime(),
-												value.getEnd_datetime(), ""));
+												value.getEnd_datetime(), 
+												value.getActivity_semantics()));
 							}
 						}else {
 							participantsStopsById.put(value.getParticipantID(),
 									new ParticipantStop(value.getParticipantID(),
 											value.getPlaceAccordingToHierarchy(hierarchy),
 											value.getStart_datetime(),
-											value.getEnd_datetime(), ""));
+											value.getEnd_datetime(), 
+											value.getActivity_semantics()));
 						}
 						
-						
-
 						/////////////////////////////////////
 						//printHashMap(participantsStopsById);
 						//System.out.println("HASHMAP size = " + Integer.toString(participantsStopsById.size()));
@@ -78,28 +77,34 @@ public class PlacesWithMin {
 					@Override
 					public boolean filter(SemTrajSegment value, Context<SemTrajSegment> ctx) throws Exception {
 
+						if(value.getActivity_semantics() == null) return false;
+						
 						for(SemTrajSegment ev : ctx.getEventsForPattern("1st")) {
 							if(participantsStopsById.containsKey(value.getParticipantID())) {
-								if(participantsStopsById.get(value.getParticipantID()).getPlace().equals(value.getPlaceAccordingToHierarchy(hierarchy))) {
+								if(participantsStopsById.get(value.getParticipantID()).getPlace().equals(value.getPlaceAccordingToHierarchy(hierarchy))
+										&& participantsStopsById.get(value.getParticipantID()).getActivity().equals(value.getActivity_semantics())) {
 									participantsStopsById.put(value.getParticipantID(),
 											new ParticipantStop(value.getParticipantID(),
 													value.getPlaceAccordingToHierarchy(hierarchy),
 													participantsStopsById.get(value.getParticipantID()).getStart_time_stop(),
-													value.getEnd_datetime(), ""));
+													value.getEnd_datetime(), 
+													value.getActivity_semantics()));
 									
 								}else {
 									participantsStopsById.put(value.getParticipantID(),
 											new ParticipantStop(value.getParticipantID(),
 													value.getPlaceAccordingToHierarchy(hierarchy),
 													value.getStart_datetime(),
-													value.getEnd_datetime(), ""));
+													value.getEnd_datetime(), 
+													value.getActivity_semantics()));
 								}
 							}else {
 								participantsStopsById.put(value.getParticipantID(),
 										new ParticipantStop(value.getParticipantID(),
 												value.getPlaceAccordingToHierarchy(hierarchy),
 												value.getStart_datetime(),
-												value.getEnd_datetime(), ""));
+												value.getEnd_datetime(), 
+												value.getActivity_semantics()));
 							}
 													
 							/////////////////////////////////////
@@ -107,9 +112,9 @@ public class PlacesWithMin {
 							//System.out.println("HASHMAP size = " + Integer.toString(participantsStopsById.size()));
 							/////////////////////////////////////
 												
-							overlappedSegmentsIdsOfSamePlace = findOverlappedSegmentsIdsOfSamePlace();							
+							overlappedSegmentsIdsOfSameActivityDifferentPlace = findOverlappedSegmentsIdsOfSameActivityDifferentPlace();							
 							
-							if(overlappedSegmentsIdsOfSamePlace.size()>=MinimumNbParticipants) {
+							if(overlappedSegmentsIdsOfSameActivityDifferentPlace.size()>=2) {
 								return true;
 							}
 							
@@ -123,25 +128,24 @@ public class PlacesWithMin {
 		return p;
 	}
 	
-	
-	public static DataStream<PlacesWithMinAlert> placesWithMinAlertStream (PatternStream<SemTrajSegment> patternStream){
-		DataStream<PlacesWithMinAlert> alerts = patternStream.select(new PatternSelectFunction<SemTrajSegment,PlacesWithMinAlert>(){
+	public static DataStream<SameActivityDifferentRegionAlert> sameActivityDifferentRegionAlertStream (PatternStream<SemTrajSegment> patternStream){
+		DataStream<SameActivityDifferentRegionAlert> alerts = patternStream.select(new PatternSelectFunction<SemTrajSegment, SameActivityDifferentRegionAlert>() {
 
 			@Override
-			public PlacesWithMinAlert select(Map<String, List<SemTrajSegment>> pattern) throws Exception {
-				return new PlacesWithMinAlert(overlappedSegmentsIdsOfSamePlace, 
+			public SameActivityDifferentRegionAlert select(Map<String, List<SemTrajSegment>> pattern) throws Exception {
+				return new SameActivityDifferentRegionAlert(overlappedSegmentsIdsOfSameActivityDifferentPlace,
 						"",
 						"",
-						((SemTrajSegment)pattern.get("2nd").get(0)).getPlaceAccordingToHierarchy("town"),
-						"town");
+						"town",
+						((SemTrajSegment)pattern.get("2nd").get(0)).getActivity_semantics());
 			}
-			
 		});
 		
 		return alerts;
 	}
 	
-	private static HashSet<Integer> findOverlappedSegmentsIdsOfSamePlace(){
+	
+	private static HashSet<Integer> findOverlappedSegmentsIdsOfSameActivityDifferentPlace(){
 		HashSet<ParticipantStop> overlappedIds =  new HashSet<>();
 		
 		ArrayList<ParticipantStop> overlappedArray =  new ArrayList<>();
@@ -153,9 +157,10 @@ public class PlacesWithMin {
 			overlappedArray.clear();
 			overlappedArray.add(participantsStopsById.get(allKeys[i]));
 			
-			//add all the overlapped ParticipantStop with the i element in participantsStopsById (with the same place)
+			//add all the overlapped ParticipantStop with the i element in participantsStopsById (with the same activity and different places)
 			for(int j = i+1; j<keys.size(); j++) {
-				if(participantsStopsById.get(allKeys[i]).getPlace().equals(participantsStopsById.get(allKeys[j]).getPlace())
+				if(participantsStopsById.get(allKeys[i]).getActivity().equals(participantsStopsById.get(allKeys[j]).getActivity())
+						&& !participantsStopsById.get(allKeys[i]).getPlace().equals(participantsStopsById.get(allKeys[j]).getPlace())
 						&& participantsStopsById.get(allKeys[i]).OverlappedSecondsWith(participantsStopsById.get(allKeys[j])) > 0) {
 					
 					overlappedArray.add(participantsStopsById.get(allKeys[j]));
@@ -174,7 +179,7 @@ public class PlacesWithMin {
 				//overlappedIds.add(overlappedArray.get(0)); //add the first element of overlappedArray (this element overlap with all overlappedArray elements)
 			}
 			
-			if(overlappedIds.size() >= MinimumNbParticipants) {
+			if(overlappedIds.size() >= 2) {
 				break;
 			}
 		}
@@ -192,12 +197,5 @@ public class PlacesWithMin {
 		}
 				
 		return setOfOverlappedIds;
-	}
-	
-	
-	public static void printHashMap(HashMap<Integer,ParticipantStop> stopsById) {
-		for (Map.Entry me : stopsById.entrySet()) {
-	          System.out.println(me.getValue().toString());
-	        }
 	}
 }

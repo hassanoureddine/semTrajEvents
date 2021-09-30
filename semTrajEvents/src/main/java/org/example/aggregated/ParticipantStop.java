@@ -10,12 +10,16 @@ public class ParticipantStop {
 	private String start_time_stop;
 	private String end_time_stop;
 	
+	private String activity;
 	
-	public ParticipantStop(int participantID, String place, String start_time_stop, String end_time_stop) {
+	
+	public ParticipantStop(int participantID, String place, String start_time_stop, String end_time_stop, String activity) {
 		this.participantID = participantID;
         this.place = place;
         this.start_time_stop = start_time_stop;
         this.end_time_stop = end_time_stop;
+        
+        this.setActivity(activity);
 	}
 	
 	public int getParticipantID() {
@@ -44,10 +48,22 @@ public class ParticipantStop {
 		this.end_time_stop = end_time_stop;
 	}
 	
+	public String getActivity() {
+		return activity;
+	}
+
+	public void setActivity(String activity) {
+		this.activity = activity;
+	}
+	
+	
 	@Override
     public String toString() {
-		return "Participant stop for: " + Integer.toString(getParticipantID())
-		+ " at place: " + getPlace() + " at interval : [" + getStart_time_stop() + ", " + getEnd_time_stop() + "]";
+		String toReturn = "Participant stop for: " + Integer.toString(getParticipantID());
+		toReturn = toReturn + " at place: " + getPlace() + " at interval : [" + getStart_time_stop() + ", " + getEnd_time_stop() + "]";
+		toReturn = toReturn + " having activity: " + getActivity();
+		
+		return toReturn;
 	}
 	
 	
@@ -113,6 +129,5 @@ public class ParticipantStop {
 	private static Timestamp MinTimestamp(Timestamp a, Timestamp b) {
 		return a.compareTo(b) > 0? b : a;
 	}
-	
-	
+
 }
