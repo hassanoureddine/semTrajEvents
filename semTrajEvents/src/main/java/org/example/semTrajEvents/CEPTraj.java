@@ -18,6 +18,8 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.example.aggregated.AggegatedStop;
 import org.example.aggregated.AggregatedStopAlert;
+import org.example.aggregated.HomeToOfficeMeet;
+import org.example.aggregated.HomeToOfficeMeetAlert;
 import org.example.aggregated.PlacesWithMin;
 import org.example.aggregated.PlacesWithMinAlert;
 import org.example.aggregated.SameActivityDifferentRegion;
@@ -105,11 +107,13 @@ public class CEPTraj {
 		
 		
 		//(5)
+		PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, HomeToOfficeMeet.homeToOfficeMeet(1, "town"));
+		DataStream<HomeToOfficeMeetAlert> alerts = HomeToOfficeMeet.homeToOfficeMeetAlertStream(patternStream);
 		
 		
 		//(6)
-		PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, SameActivityDifferentRegion.sameActivityDifferentRegion("town"));
-		DataStream<SameActivityDifferentRegionAlert> alerts = SameActivityDifferentRegion.sameActivityDifferentRegionAlertStream(patternStream);
+		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, SameActivityDifferentRegion.sameActivityDifferentRegion("town"));
+		//DataStream<SameActivityDifferentRegionAlert> alerts = SameActivityDifferentRegion.sameActivityDifferentRegionAlertStream(patternStream);
 		
 		
 		//(7)

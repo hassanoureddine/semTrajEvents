@@ -12,6 +12,19 @@ public class ParticipantStop {
 	
 	private String activity;
 	
+	private Boolean metSomeone;
+	
+	public ParticipantStop(int participantID, String place, String start_time_stop, String end_time_stop, String activity, Boolean metSomeone) {
+		this.participantID = participantID;
+        this.place = place;
+        this.start_time_stop = start_time_stop;
+        this.end_time_stop = end_time_stop;
+        
+        this.setActivity(activity);
+        
+        this.setMetSomeone(metSomeone);
+	}
+	
 	
 	public ParticipantStop(int participantID, String place, String start_time_stop, String end_time_stop, String activity) {
 		this.participantID = participantID;
@@ -20,7 +33,17 @@ public class ParticipantStop {
         this.end_time_stop = end_time_stop;
         
         this.setActivity(activity);
+        
 	}
+	
+	public ParticipantStop(int participantID, String place, String start_time_stop, String end_time_stop) {
+		this.participantID = participantID;
+        this.place = place;
+        this.start_time_stop = start_time_stop;
+        this.end_time_stop = end_time_stop;
+        
+	}
+	
 	
 	public int getParticipantID() {
 		return participantID;
@@ -56,12 +79,22 @@ public class ParticipantStop {
 		this.activity = activity;
 	}
 	
+	public Boolean getMetSomeone() {
+		return metSomeone;
+	}
+
+	public void setMetSomeone(Boolean metSomeone) {
+		this.metSomeone = metSomeone;
+	}
 	
 	@Override
     public String toString() {
 		String toReturn = "Participant stop for: " + Integer.toString(getParticipantID());
 		toReturn = toReturn + " at place: " + getPlace() + " at interval : [" + getStart_time_stop() + ", " + getEnd_time_stop() + "]";
 		toReturn = toReturn + " having activity: " + getActivity();
+		
+		if(getMetSomeone()!= null) 
+			toReturn = toReturn + " have met someone: " + Boolean.toString(getMetSomeone());
 		
 		return toReturn;
 	}
@@ -129,5 +162,7 @@ public class ParticipantStop {
 	private static Timestamp MinTimestamp(Timestamp a, Timestamp b) {
 		return a.compareTo(b) > 0? b : a;
 	}
+
+	
 
 }

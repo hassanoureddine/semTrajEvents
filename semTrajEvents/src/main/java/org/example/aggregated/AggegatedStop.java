@@ -35,21 +35,21 @@ public class AggegatedStop {
 										new ParticipantStop(value.getParticipantID(),
 												value.getPlaceAccordingToHierarchy(hierarchy),
 												participantsStopsById.get(value.getParticipantID()).getStart_time_stop(),
-												value.getEnd_datetime(), ""));
+												value.getEnd_datetime()));
 								
 							}else {
 								participantsStopsById.put(value.getParticipantID(),
 										new ParticipantStop(value.getParticipantID(),
 												value.getPlaceAccordingToHierarchy(hierarchy),
 												value.getStart_datetime(),
-												value.getEnd_datetime(), ""));
+												value.getEnd_datetime()));
 							}
 						}else {
 							participantsStopsById.put(value.getParticipantID(),
 									new ParticipantStop(value.getParticipantID(),
 											value.getPlaceAccordingToHierarchy(hierarchy),
 											value.getStart_datetime(),
-											value.getEnd_datetime(), ""));
+											value.getEnd_datetime()));
 						}
 						
 						
@@ -76,21 +76,21 @@ public class AggegatedStop {
 											new ParticipantStop(value.getParticipantID(),
 													value.getPlaceAccordingToHierarchy(hierarchy),
 													participantsStopsById.get(value.getParticipantID()).getStart_time_stop(),
-													value.getEnd_datetime(), ""));
+													value.getEnd_datetime()));
 									
 								}else {
 									participantsStopsById.put(value.getParticipantID(),
 											new ParticipantStop(value.getParticipantID(),
 													value.getPlaceAccordingToHierarchy(hierarchy),
 													value.getStart_datetime(),
-													value.getEnd_datetime(), ""));
+													value.getEnd_datetime()));
 								}
 							}else {
 								participantsStopsById.put(value.getParticipantID(),
 										new ParticipantStop(value.getParticipantID(),
 												value.getPlaceAccordingToHierarchy(hierarchy),
 												value.getStart_datetime(),
-												value.getEnd_datetime(), ""));
+												value.getEnd_datetime()));
 							}
 							
 							
