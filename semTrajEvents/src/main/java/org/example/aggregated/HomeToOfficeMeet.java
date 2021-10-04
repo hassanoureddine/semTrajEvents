@@ -75,8 +75,8 @@ public class HomeToOfficeMeet {
 							}
 
 							/////////////////////////////////////
-							printHashMap(participantsStopsByIdForMeet);
-							System.out.println("HASHMAP size = " + Integer.toString(participantsStopsById.size()));
+							//printHashMap(participantsStopsByIdForMeet);
+							//System.out.println("HASHMAP size = " + Integer.toString(participantsStopsById.size()));
 							/////////////////////////////////////
 							
 							return true;
@@ -120,8 +120,8 @@ public class HomeToOfficeMeet {
 							
 							
 							/////////////////////////////////////
-							printHashMap(participantsStopsByIdForMeet);
-							System.out.println("HASHMAP size = " + Integer.toString(participantsStopsById.size()));
+							//printHashMap(participantsStopsByIdForMeet);
+							//System.out.println("HASHMAP size = " + Integer.toString(participantsStopsById.size()));
 							/////////////////////////////////////
 							
 							

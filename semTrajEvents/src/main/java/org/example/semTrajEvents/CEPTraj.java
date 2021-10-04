@@ -20,6 +20,8 @@ import org.example.aggregated.AggegatedStop;
 import org.example.aggregated.AggregatedStopAlert;
 import org.example.aggregated.HomeToOfficeMeet;
 import org.example.aggregated.HomeToOfficeMeetAlert;
+import org.example.aggregated.MeetOthers;
+import org.example.aggregated.MeetOthersAlert;
 import org.example.aggregated.PlacesWithMin;
 import org.example.aggregated.PlacesWithMinAlert;
 import org.example.aggregated.SameActivityDifferentRegion;
@@ -107,8 +109,8 @@ public class CEPTraj {
 		
 		
 		//(5)
-		PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, HomeToOfficeMeet.homeToOfficeMeet(1, "town"));
-		DataStream<HomeToOfficeMeetAlert> alerts = HomeToOfficeMeet.homeToOfficeMeetAlertStream(patternStream);
+		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, HomeToOfficeMeet.homeToOfficeMeet(1, "town"));
+		//DataStream<HomeToOfficeMeetAlert> alerts = HomeToOfficeMeet.homeToOfficeMeetAlertStream(patternStream);
 		
 		
 		//(6)
@@ -117,6 +119,9 @@ public class CEPTraj {
 		
 		
 		//(7)
+		PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, MeetOthers.meetOthers(2, "town", 4000));
+		DataStream<MeetOthersAlert> alerts = MeetOthers.meetOthersAlertStream(patternStream);
+		
 		
 		/*PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, sequence.arriveLeaveBureau());	
 		DataStream<ArriveLeaveBureauAlert> alerts = patternStream.select(new PatternSelectFunction<SemTrajSegment, ArriveLeaveBureauAlert>() {
