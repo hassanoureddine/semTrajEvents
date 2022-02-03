@@ -16,18 +16,9 @@ import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
-import org.example.aggregated.AggegatedStop;
-import org.example.aggregated.AggregatedStopAlert;
-import org.example.aggregated.HomeToOfficeMeet;
-import org.example.aggregated.HomeToOfficeMeetAlert;
-import org.example.aggregated.MeetOthers;
-import org.example.aggregated.MeetOthersAlert;
-import org.example.aggregated.PlacesWithMin;
-import org.example.aggregated.PlacesWithMinAlert;
-import org.example.aggregated.SameActivityDifferentRegion;
-import org.example.aggregated.SameActivityDifferentRegionAlert;
 import org.example.events.*;
 import org.example.individual.*;
+import org.example.aggregated.*;
 import org.example.patternsForTest.*;
 
 
@@ -68,12 +59,12 @@ public class CEPTraj {
 		
 		//------------------Individual------------------
 		//(1)
-		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, IndividualStop.individualStop("suburb", 5));		 
+		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, IndividualStop.individualStop("suburb", 2));		 
 		//DataStream<IndividualStopAlert> alerts = IndividualStop.individualStopAlertStream(patternStream);
 		
 		//(2)
-		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, SportWithHighPollution.sportWithHighPollution());		 
-		//DataStream<SportWithHighPollutionAlert> alerts = SportWithHighPollution.sportWithHighPollutionAlertStream(patternStream);
+		//PatternStream<SemTrajSegment> patternStream1 = CEP.pattern(partitionedInput, SportWithHighPollution.sportWithHighPollution());		 
+		//DataStream<SportWithHighPollutionAlert> alerts1 = SportWithHighPollution.sportWithHighPollutionAlertStream(patternStream1);
 		
 		//(3)
 		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, HomeToOfficeHighPollution.homeToOfficeHighPollution(3));		 
@@ -109,7 +100,7 @@ public class CEPTraj {
 		
 		
 		//(5)
-		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, HomeToOfficeMeet.homeToOfficeMeet(1, "town"));
+		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, HomeToOfficeMeet.homeToOfficeMeet(1, "road"));
 		//DataStream<HomeToOfficeMeetAlert> alerts = HomeToOfficeMeet.homeToOfficeMeetAlertStream(patternStream);
 		
 		
@@ -119,8 +110,13 @@ public class CEPTraj {
 		
 		
 		//(7)
-		PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, MeetOthers.meetOthers(2, "town", 4000));
-		DataStream<MeetOthersAlert> alerts = MeetOthers.meetOthersAlertStream(patternStream);
+		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, MeetOthers.meetOthers(2, "town", 4000));
+		//DataStream<MeetOthersAlert> alerts = MeetOthers.meetOthersAlertStream(patternStream);
+		
+		
+		//8
+		PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, SportBehaviorDifferentRegion.sportBehaviorDifferentRegion("town"));
+		DataStream<SportBehaviorDifferentRegionAlert> alerts = SportBehaviorDifferentRegion.sportBehaviorDifferentRegionAlertStream(patternStream);
 		
 		
 		/*PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, sequence.arriveLeaveBureau());	
@@ -155,6 +151,9 @@ public class CEPTraj {
 		alerts.map(v -> v.toString()).writeAsText(parameterTool.getRequired("out"), WriteMode.OVERWRITE).setParallelism(1);	
 		alerts.map(v -> v.toString()).print();
 		
+		
+		//alerts1.map(v -> v.toString()).writeAsText(parameterTool.getRequired("out"), WriteMode.OVERWRITE).setParallelism(1);	
+		//alerts1.map(v -> v.toString()).print();
 		
         env.execute("Flink CEP semantic trajectories");
 	}

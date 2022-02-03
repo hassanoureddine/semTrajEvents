@@ -12,6 +12,8 @@ public class ParticipantStop {
 	
 	private String activity;
 	
+	private String event;
+	
 	private Boolean metSomeone;
 	
 	public ParticipantStop(int participantID, String place, String start_time_stop, String end_time_stop, String activity, Boolean metSomeone) {
@@ -77,6 +79,15 @@ public class ParticipantStop {
 
 	public void setActivity(String activity) {
 		this.activity = activity;
+	}
+	
+	public String getEvent() {
+		return event;
+	}
+
+
+	public void setEvent(String event) {
+		this.event = event;
 	}
 	
 	public Boolean getMetSomeone() {
@@ -162,6 +173,9 @@ public class ParticipantStop {
 	private static Timestamp MinTimestamp(Timestamp a, Timestamp b) {
 		return a.compareTo(b) > 0? b : a;
 	}
+
+
+	
 
 	
 

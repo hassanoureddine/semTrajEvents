@@ -544,4 +544,21 @@ public class SemTrajSegment {
 		}
 		return null;
 	}
+	
+/*	public boolean isSportBehavior() {
+		switch(event_semantics) {
+		case "course à pied":
+			return true;
+		case "Marcher":
+			return true;
+		case "Sport":
+			return true;
+		case "promenade avec chien":
+			return true;
+		}
+		return false;
+	}
+	*/
+	
+	
 }

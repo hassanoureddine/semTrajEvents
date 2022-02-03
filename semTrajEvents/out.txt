@@ -1,1 +1,14 @@
-The alert stop is detected for participant1: 96 and participant2: 98 at place: Rue Jean Macu00e9 at hierarchy: road with duration = 173 secs starting at   and ending at  
+The alert Same Activity with Different Regions is detected for participants: [112, 117, ] for activity: Sport at hierarchy: town starting at  and ending at 
+The alert Same Activity with Different Regions is detected for participants: [112, 117, ] for activity: Sport at hierarchy: town starting at  and ending at 
+The alert Same Activity with Different Regions is detected for participants: [112, 117, ] for activity: Sport at hierarchy: town starting at  and ending at 
+The alert Same Activity with Different Regions is detected for participants: [112, 117, ] for activity: Sport at hierarchy: town starting at  and ending at 
+The alert Same Activity with Different Regions is detected for participants: [112, 117, ] for activity: Sport at hierarchy: town starting at  and ending at 
+The alert Same Activity with Different Regions is detected for participants: [112, 117, ] for activity: Sport at hierarchy: town starting at  and ending at 
+The alert Same Activity with Different Regions is detected for participants: [112, 117, ] for activity: Sport at hierarchy: town starting at  and ending at 
+The alert Same Activity with Different Regions is detected for participants: [112, 117, ] for activity: Sport at hierarchy: town starting at  and ending at 
+The alert Same Activity with Different Regions is detected for participants: [112, 117, ] for activity: Sport at hierarchy: town starting at  and ending at 
+The alert Same Activity with Different Regions is detected for participants: [112, 117, ] for activity: Sport at hierarchy: town starting at  and ending at 
+The alert Same Activity with Different Regions is detected for participants: [112, 117, ] for activity: Sport at hierarchy: town starting at  and ending at 
+The alert Same Activity with Different Regions is detected for participants: [112, 117, ] for activity: Sport at hierarchy: town starting at  and ending at 
+The alert Same Activity with Different Regions is detected for participants: [112, 117, ] for activity: Sport at hierarchy: town starting at  and ending at 
+The alert Same Activity with Different Regions is detected for participants: [112, 117, ] for activity: Sport at hierarchy: town starting at  and ending at 

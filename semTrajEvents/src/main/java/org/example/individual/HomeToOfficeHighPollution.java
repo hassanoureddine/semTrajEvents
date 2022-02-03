@@ -89,7 +89,7 @@ public class HomeToOfficeHighPollution {
 						}
 						return false;
 					}
-				}).within(Time.hours(1));
+				}).within(Time.hours(2));
 		return p;
 	}
 	

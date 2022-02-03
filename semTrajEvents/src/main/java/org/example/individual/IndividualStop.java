@@ -119,6 +119,6 @@ public class IndividualStop {
 		//long sec = diffSec % 60;
 		//System.out.println("The difference is "+min+" minutes and "+sec+" seconds.");
 		
-		return min;
+		return diffSec;
 	}
 }
