@@ -11,6 +11,7 @@ import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.cep.CEP;
 import org.apache.flink.cep.PatternSelectFunction;
 import org.apache.flink.cep.PatternStream;
+import org.apache.flink.connector.kafka.source.KafkaSource;
 import org.apache.flink.core.fs.FileSystem.WriteMode;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -18,6 +19,8 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.example.events.*;
 import org.example.individual.*;
+import org.example.metrics.CountingMap;
+import org.example.metrics.MyMapper;
 import org.example.aggregated.*;
 import org.example.patternsForTest.*;
 
@@ -32,10 +35,11 @@ public class CEPTraj {
 		Properties props=parameterTool.getProperties();
 		//props.setProperty("auto.offset.reset", "earliest"); 
 		props.setProperty("auto.offset.reset", "latest"); 
-	    
+		props.setProperty("flink.partition-discovery.interval-millis", "500");
+	    //parameterTool.getRequired("topic")
 		// Set up the execution environment
 		StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();	
-		
+		//env.setParallelism(8);
 		//env.enableCheckpointing(1000).setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
 		
         // Input stream of monitoring events
@@ -45,6 +49,7 @@ public class CEPTraj {
 						new SemTrajSegmDeserializer(),
 						props)).
 				assignTimestampsAndWatermarks(new SemTrajWatermarks());
+
 		
 		DataStream<SemTrajSegment> partitionedInput = messageStream.keyBy(new KeySelector<SemTrajSegment, Integer>(){
 			@Override
@@ -55,7 +60,15 @@ public class CEPTraj {
 		
 		DataStream<SemTrajSegment> nonPartitionedInput = messageStream;
 		
-		//partitionedInput.map(v -> v.toString()).print();
+		partitionedInput.map(v -> v.toString()).print();
+		nonPartitionedInput.map(v -> v.toString()).print();
+		
+		
+		//nonPartitionedInput.map(new MyMapper()).writeAsText("perf.txt", WriteMode.OVERWRITE);
+		//nonPartitionedInput.map(new CountingMap()).writeAsText("perf.txt", WriteMode.OVERWRITE);
+		env.getConfig().setLatencyTrackingInterval(1000L);
+		
+		
 		
 		//------------------Individual------------------
 		//(1)
@@ -67,8 +80,8 @@ public class CEPTraj {
 		//DataStream<SportWithHighPollutionAlert> alerts1 = SportWithHighPollution.sportWithHighPollutionAlertStream(patternStream1);
 		
 		//(3)
-		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, HomeToOfficeHighPollution.homeToOfficeHighPollution(3));		 
-		//DataStream<HomeToOfficeHighPollutionAlert> alerts = HomeToOfficeHighPollution.homeToOfficeHighPollutionAlertStream(patternStream);
+		PatternStream<SemTrajSegment> patternStreamQuery1 = CEP.pattern(partitionedInput, HomeToOfficeHighPollution.homeToOfficeHighPollution(3));		 
+		DataStream<HomeToOfficeHighPollutionAlert> alertsQuery1 = HomeToOfficeHighPollution.homeToOfficeHighPollutionAlertStream(patternStreamQuery1);
 		
 		//(4)
 		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, ArriveLeaveOfficeDifferentMode.arriveLeaveOfficeDifferentMode());		 
@@ -100,8 +113,8 @@ public class CEPTraj {
 		
 		
 		//(5)
-		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, HomeToOfficeMeet.homeToOfficeMeet(1, "road"));
-		//DataStream<HomeToOfficeMeetAlert> alerts = HomeToOfficeMeet.homeToOfficeMeetAlertStream(patternStream);
+		PatternStream<SemTrajSegment> patternStreamQuery2 = CEP.pattern(partitionedInput, HomeToOfficeMeet.homeToOfficeMeet(1, "road"));
+		DataStream<HomeToOfficeMeetAlert> alertsQuery2 = HomeToOfficeMeet.homeToOfficeMeetAlertStream(patternStreamQuery2);
 		
 		
 		//(6)
@@ -115,8 +128,8 @@ public class CEPTraj {
 		
 		
 		//8
-		PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, SportBehaviorDifferentRegion.sportBehaviorDifferentRegion("town"));
-		DataStream<SportBehaviorDifferentRegionAlert> alerts = SportBehaviorDifferentRegion.sportBehaviorDifferentRegionAlertStream(patternStream);
+		PatternStream<SemTrajSegment> patternStreamQuery3 = CEP.pattern(partitionedInput, SportBehaviorDifferentRegion.sportBehaviorDifferentRegion("town"));
+		DataStream<SportBehaviorDifferentRegionAlert> alertsQuery3 = SportBehaviorDifferentRegion.sportBehaviorDifferentRegionAlertStream(patternStreamQuery3);
 		
 		
 		/*PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, sequence.arriveLeaveBureau());	
@@ -148,12 +161,19 @@ public class CEPTraj {
 		//-----------------------------------------------------------------------------------------
 		//patternStream.select(new CustomSelectFunction()).writeAsText(parameterTool.getRequired("out"), WriteMode.OVERWRITE);
 		
-		alerts.map(v -> v.toString()).writeAsText(parameterTool.getRequired("out"), WriteMode.OVERWRITE).setParallelism(1);	
-		alerts.map(v -> v.toString()).print();
+		alertsQuery1.map(v -> v.toString()).writeAsText("outQuery1.txt", WriteMode.OVERWRITE);	
+		alertsQuery1.map(v -> v.toString()).print();
+		
+		alertsQuery2.map(v -> v.toString()).writeAsText("outQuery2.txt", WriteMode.OVERWRITE);	
+		alertsQuery2.map(v -> v.toString()).print();
+		
+		alertsQuery3.map(v -> v.toString()).writeAsText("outQuery3.txt", WriteMode.OVERWRITE);	
+		alertsQuery3.map(v -> v.toString()).print();
 		
 		
 		//alerts1.map(v -> v.toString()).writeAsText(parameterTool.getRequired("out"), WriteMode.OVERWRITE).setParallelism(1);	
 		//alerts1.map(v -> v.toString()).print();
+		
 		
         env.execute("Flink CEP semantic trajectories");
 	}

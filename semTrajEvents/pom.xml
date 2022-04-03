@@ -72,6 +72,20 @@
 	    <artifactId>flink-connector-kafka_2.11</artifactId>
 	    <version>1.13.0</version>
 	</dependency>
+	
+	
+	<dependency>
+    <groupId>org.apache.flink</groupId>
+    <artifactId>flink-metrics-dropwizard</artifactId>
+    <version>1.13.0</version>
+	</dependency>
+	
+	<!-- https://mvnrepository.com/artifact/org.apache.flink/flink-metrics-prometheus -->
+	<dependency>
+	    <groupId>org.apache.flink</groupId>
+	    <artifactId>flink-metrics-prometheus_2.12</artifactId>
+	    <version>1.13.0</version>
+	</dependency>
 		
 	<dependency>
             <groupId>com.google.code.gson</groupId>
