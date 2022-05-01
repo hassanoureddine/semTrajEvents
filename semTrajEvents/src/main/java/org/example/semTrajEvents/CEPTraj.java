@@ -4,8 +4,10 @@ package org.example.semTrajEvents;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
+import org.apache.flink.api.common.JobExecutionResult;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.cep.CEP;
@@ -60,8 +62,8 @@ public class CEPTraj {
 		
 		DataStream<SemTrajSegment> nonPartitionedInput = messageStream;
 		
-		partitionedInput.map(v -> v.toString()).print();
-		nonPartitionedInput.map(v -> v.toString()).print();
+		//partitionedInput.map(v -> v.toString()).print();
+		//nonPartitionedInput.map(v -> v.toString()).print();
 		
 		
 		//nonPartitionedInput.map(new MyMapper()).writeAsText("perf.txt", WriteMode.OVERWRITE);
@@ -71,25 +73,25 @@ public class CEPTraj {
 		
 		
 		//------------------Individual------------------
-		//(1)
-		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, IndividualStop.individualStop("suburb", 2));		 
-		//DataStream<IndividualStopAlert> alerts = IndividualStop.individualStopAlertStream(patternStream);
+		//IE1 (1)
+		PatternStream<SemTrajSegment> patternStreamIE1 = CEP.pattern(partitionedInput, IndividualStop.individualStop("suburb", 2));		 
+		DataStream<IndividualStopAlert> alertsIE1 = IndividualStop.individualStopAlertStream(patternStreamIE1);
 		
-		//(2)
-		//PatternStream<SemTrajSegment> patternStream1 = CEP.pattern(partitionedInput, SportWithHighPollution.sportWithHighPollution());		 
-		//DataStream<SportWithHighPollutionAlert> alerts1 = SportWithHighPollution.sportWithHighPollutionAlertStream(patternStream1);
+		//IE2 (2)
+		PatternStream<SemTrajSegment> patternStreamIE2 = CEP.pattern(partitionedInput, SportWithHighPollution.sportWithHighPollution());		 
+		DataStream<SportWithHighPollutionAlert> alertsIE2 = SportWithHighPollution.sportWithHighPollutionAlertStream(patternStreamIE2);
 		
-		//(3)
-		PatternStream<SemTrajSegment> patternStreamQuery1 = CEP.pattern(partitionedInput, HomeToOfficeHighPollution.homeToOfficeHighPollution(3));		 
-		DataStream<HomeToOfficeHighPollutionAlert> alertsQuery1 = HomeToOfficeHighPollution.homeToOfficeHighPollutionAlertStream(patternStreamQuery1);
+		//IE3 (3)
+		PatternStream<SemTrajSegment> patternStreamIE3 = CEP.pattern(partitionedInput, HomeToOfficeHighPollution.homeToOfficeHighPollution(3));		 
+		DataStream<HomeToOfficeHighPollutionAlert> alertsIE3 = HomeToOfficeHighPollution.homeToOfficeHighPollutionAlertStream(patternStreamIE3);
 		
 		//(4)
 		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, ArriveLeaveOfficeDifferentMode.arriveLeaveOfficeDifferentMode());		 
-		//DataStream<ArriveLeaveOfficeDifferentModeAlert> alerts = ArriveLeaveOfficeDifferentMode.arriveLeaveOfficeDifferentModeAlertStream(patternStream);
+		//DataStream<ArriveLeaveOfficeDifferentModeAlert> alerts = ArriveLeaveOfficeDifferentMode.arriveLeaveOfficeDifferentModeAlertStream(patternStreamIE4);
 		
-		//(5)
-		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, AtOfficeAfter.atOfficeAfter(20));
-		//DataStream<AtOfficeAfterAlert> alerts = AtOfficeAfter.atOfficeAfterStream(patternStream, 20);
+		//IE4 (5)
+		PatternStream<SemTrajSegment> patternStreamIE4 = CEP.pattern(partitionedInput, AtOfficeAfter.atOfficeAfter(20));
+		DataStream<AtOfficeAfterAlert> alertsIE4 = AtOfficeAfter.atOfficeAfterStream(patternStreamIE4, 20);
 		
 		//(6)
 		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, LeavingOfficeBefore.leavingOfficeBefore(17));
@@ -98,9 +100,9 @@ public class CEPTraj {
 		
 		
 		//------------------Aggregated------------------
-		//(1)
-		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, AggegatedStop.aggregatedStop("road", 1, 2));
-		//DataStream<AggregatedStopAlert> alerts = AggegatedStop.aggregatedStopAlertStream(patternStream);
+		//AE1 (1)
+		PatternStream<SemTrajSegment> patternStreamAE1 = CEP.pattern(nonPartitionedInput, AggegatedStop.aggregatedStop("road", 1, 2));
+		DataStream<AggregatedStopAlert> alertsAE1 = AggegatedStop.aggregatedStopAlertStream(patternStreamAE1);
 		
 		//(2)
 		
@@ -112,24 +114,22 @@ public class CEPTraj {
 		//(4)
 		
 		
-		//(5)
-		PatternStream<SemTrajSegment> patternStreamQuery2 = CEP.pattern(partitionedInput, HomeToOfficeMeet.homeToOfficeMeet(1, "road"));
-		DataStream<HomeToOfficeMeetAlert> alertsQuery2 = HomeToOfficeMeet.homeToOfficeMeetAlertStream(patternStreamQuery2);
+		//AE2 (5)
+		PatternStream<SemTrajSegment> patternStreamAE2 = CEP.pattern(partitionedInput, HomeToOfficeMeet.homeToOfficeMeet(1, "road"));
+		DataStream<HomeToOfficeMeetAlert> alertsAE2 = HomeToOfficeMeet.homeToOfficeMeetAlertStream(patternStreamAE2);
 		
 		
 		//(6)
 		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, SameActivityDifferentRegion.sameActivityDifferentRegion("town"));
-		//DataStream<SameActivityDifferentRegionAlert> alerts = SameActivityDifferentRegion.sameActivityDifferentRegionAlertStream(patternStream);
+		//DataStream<SameActivityDifferentRegionAlert> alerts = SameActivityDifferentRegion.sameActivityDifferentRegionAlertStream(patternStream);	
+		//AE3 (6)
+		PatternStream<SemTrajSegment> patternStreamAE3 = CEP.pattern(partitionedInput, SportBehaviorDifferentRegion.sportBehaviorDifferentRegion("town"));
+		DataStream<SportBehaviorDifferentRegionAlert> alertsAE3 = SportBehaviorDifferentRegion.sportBehaviorDifferentRegionAlertStream(patternStreamAE3);
 		
 		
-		//(7)
-		//PatternStream<SemTrajSegment> patternStream = CEP.pattern(nonPartitionedInput, MeetOthers.meetOthers(2, "town", 4000));
-		//DataStream<MeetOthersAlert> alerts = MeetOthers.meetOthersAlertStream(patternStream);
-		
-		
-		//8
-		PatternStream<SemTrajSegment> patternStreamQuery3 = CEP.pattern(partitionedInput, SportBehaviorDifferentRegion.sportBehaviorDifferentRegion("town"));
-		DataStream<SportBehaviorDifferentRegionAlert> alertsQuery3 = SportBehaviorDifferentRegion.sportBehaviorDifferentRegionAlertStream(patternStreamQuery3);
+		//AE4 (7)
+		PatternStream<SemTrajSegment> patternStreamAE4 = CEP.pattern(nonPartitionedInput, MeetOthers.meetOthers(2, "town", 4000));
+		DataStream<MeetOthersAlert> alertsAE4 = MeetOthers.meetOthersAlertStream(patternStreamAE4);
 		
 		
 		/*PatternStream<SemTrajSegment> patternStream = CEP.pattern(partitionedInput, sequence.arriveLeaveBureau());	
@@ -161,21 +161,33 @@ public class CEPTraj {
 		//-----------------------------------------------------------------------------------------
 		//patternStream.select(new CustomSelectFunction()).writeAsText(parameterTool.getRequired("out"), WriteMode.OVERWRITE);
 		
-		alertsQuery1.map(v -> v.toString()).writeAsText("outQuery1.txt", WriteMode.OVERWRITE);	
-		alertsQuery1.map(v -> v.toString()).print();
+		//alertsQuery1.map(v -> v.toString()).writeAsText("outQuery1.txt", WriteMode.OVERWRITE);	
+		//alertsQuery1.map(v -> v.toString()).print();
 		
-		alertsQuery2.map(v -> v.toString()).writeAsText("outQuery2.txt", WriteMode.OVERWRITE);	
-		alertsQuery2.map(v -> v.toString()).print();
+		//alertsQuery2.map(v -> v.toString()).writeAsText("outQuery2.txt", WriteMode.OVERWRITE);	
+		//alertsQuery2.map(v -> v.toString()).print();
 		
-		alertsQuery3.map(v -> v.toString()).writeAsText("outQuery3.txt", WriteMode.OVERWRITE);	
-		alertsQuery3.map(v -> v.toString()).print();
+		//alertsQuery3.map(v -> v.toString()).writeAsText("outQuery3.txt", WriteMode.OVERWRITE);	
+		//alertsQuery3.map(v -> v.toString()).print();
 		
 		
 		//alerts1.map(v -> v.toString()).writeAsText(parameterTool.getRequired("out"), WriteMode.OVERWRITE).setParallelism(1);	
 		//alerts1.map(v -> v.toString()).print();
 		
 		
-        env.execute("Flink CEP semantic trajectories");
+		//alertsIE1.map(v -> v.toString()).print();
+		//alertsIE2.map(v -> v.toString()).print();
+		//alertsIE3.map(v -> v.toString()).print();
+		//alertsIE4.map(v -> v.toString()).print();
+		
+		//alertsAE1.map(v -> v.toString()).print();
+		//alertsAE2.map(v -> v.toString()).print();
+		//alertsAE3.map(v -> v.toString()).print();
+		//alertsAE4.map(v -> v.toString()).print();
+		
+		env.execute("Flink CEP semantic trajectories");
+		//JobExecutionResult result  = env.execute("Flink CEP semantic trajectories");
+		//System.out.println("The job took " + result.getNetRuntime(TimeUnit.SECONDS) + " to execute");
 	}
 	
 	

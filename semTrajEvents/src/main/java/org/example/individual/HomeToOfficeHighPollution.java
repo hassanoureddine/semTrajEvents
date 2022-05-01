@@ -66,10 +66,12 @@ public class HomeToOfficeHighPollution {
 							
 							exposureDurationById.put(value.getParticipantID(), exposureDuration);
 							
+							/*
 							System.out.println("exposure duration: for " + Integer.toString(value.getParticipantID()) + " is "
 							+ Long.toString(exposureDurationById.get(value.getParticipantID())) 
 							+ " at " + value.getStart_datetime() 
 							+ " end " + value.getEnd_datetime());
+							*/
 							
 							return true;
 						}

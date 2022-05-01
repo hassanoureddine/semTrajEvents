@@ -1,0 +1,21 @@
+---
+groups:
+- name: flink
+  rules:
+  - alert: FlinkTaskManagerMissing
+    expr: count(flink_taskmanager_Status_JVM_CPU_Time) < 2
+    for: 1m
+    annotations:
+      summary: Fewer Flink TaskManagers than expected are running.
+      
+  - alert: FlinkJobMissing
+    expr: sum(flink_jobmanager_numRunningJobs) < 1
+    for: 3m
+    annotations:
+      summary: Fewer Flink Jobs than expected are running.    
+      
+  - alert: KafkaBrokerMissing
+    expr: sum(kafka_server_kafkaserver_brokerstate) < 1
+    for: 3m
+    annotations:
+      summary: No kafka brokers are running.    

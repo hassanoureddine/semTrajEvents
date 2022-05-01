@@ -1,0 +1,15 @@
+---
+global:
+  scrape_interval: 1s
+  evaluation_interval: 1s
+  
+rule_files:
+- flink.rules.yml
+
+scrape_configs:
+    - job_name: 'flink'
+      static_configs:
+      #- targets: ['jobmanager:9250', 'taskmanager1:9250', 'taskmanager2:9250', 'taskmanager3:9250', 'taskmanager4:9250', 'broker1:9250', 'broker2:9250', 'zookeeper:9250']
+      #- targets: ['jobmanager:9250', 'taskmanager1:9250', 'taskmanager2:9250', 'taskmanager3:9250', 'taskmanager4:9250', 'broker1:9250', 'broker2:9250', 'zookeeper:9250']
+      - targets: ['jobmanager:9250', 'taskmanager1:9250', 'taskmanager2:9250', 'broker1:9250', 'zookeeper:9250']
+      #- targets: ['jobmanager:9250', 'taskmanager1:9250', 'taskmanager2:9250']
